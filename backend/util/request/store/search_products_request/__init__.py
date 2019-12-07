@@ -1,0 +1,2 @@
+from .search_products_request import SearchProductsRequest
+from .search_products_schema import SearchProductsSchema

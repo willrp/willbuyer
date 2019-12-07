@@ -1,0 +1,8 @@
+setup:
+  config:
+    TZ: Asia/Tokyo
+    FLASK_ENV: production
+
+build:
+  docker:
+    web: production.Dockerfile

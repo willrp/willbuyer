@@ -1,0 +1,85 @@
+version: "3"
+
+services:
+    willbuyer:
+        build: .
+        restart: unless-stopped
+        depends_on:
+            - db
+            - willstores
+            - willorders
+        ports:
+            - "8000:8000"
+        environment:
+            - TZ=Asia/Tokyo
+            - FLASK_APP=backend-test.py
+            - FLASK_ENV=test
+            - DATABASE_URL=postgresql://user:test@db/willbuyer
+            - ACCESS_TOKEN=TOKEN
+            - WILLSTORES_WS=http://willstores:8001
+            - WILLORDERS_WS=http://willorders:8002
+        command: flask run --host 0.0.0.0 --port 8000 --cert=adhoc
+
+    db:
+        image: postgres
+        restart: always
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: test
+            POSTGRES_DB: willbuyer
+
+    willstores:
+        build: 
+            context: ./webservices/willstores
+        restart: unless-stopped
+        depends_on:
+            - es
+        ports:
+            - "8001:8001"
+        environment:
+            - TZ=Asia/Tokyo
+            - FLASK_APP=backend-test.py
+            - FLASK_ENV=test
+            - ES_URL=http://es:9200
+            - ACCESS_TOKEN=TOKEN
+        command: flask run --host 0.0.0.0 --port 8001
+
+    es:
+        image: elasticsearch:5.4.3
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        environment:
+            - discovery.type=single-node
+            - cluster.name=willbuyer-cluster
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+
+    willorders:
+        build: 
+            context: ./webservices/willorders
+        restart: unless-stopped
+        depends_on:
+            - db-orders
+            - willstores
+        ports:
+            - "8002:8002"
+        environment:
+            - TZ=Asia/Tokyo
+            - FLASK_APP=backend-test.py
+            - FLASK_ENV=test
+            - DATABASE_URL=postgresql://user:test@db-orders/willorders
+            - ACCESS_TOKEN=TOKEN
+            - WILLSTORES_WS=http://willstores:8001
+        command: flask run --host 0.0.0.0 --port 8002
+
+    db-orders:
+        image: postgres
+        restart: always
+        ports:
+            - "5433:5432"
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: test
+            POSTGRES_DB: willorders

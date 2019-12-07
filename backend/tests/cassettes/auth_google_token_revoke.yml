@@ -1,0 +1,53 @@
+interactions:
+- request:
+    body: grant_type=refresh_token&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&refresh_token=test.refresh.token&params=%7B%27token%27%3A+%27test.access.token%27%7D
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '238'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.22.0
+    method: POST
+    uri: https://accounts.google.com/o/oauth2/token
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/z3MMQqAQAwF0d5TfFKLB7DVxlOIuBECu4nGaCPeXQSxnsdcFUDsbk4tSPScsqTR
+        eTt4D6r/OibeZ5c1xPSVnR05QS2QONiLKGPOwhoYeixuBd+koep+AA7F5r1mAAAA
+    headers:
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443";
+        ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+      Cache-Control:
+      - private
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 01 Nov 2019 07:14:50 GMT
+      Server:
+      - ESF
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 400
+      message: Bad Request
+version: 1

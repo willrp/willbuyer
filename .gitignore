@@ -1,0 +1,10 @@
+.vscode/
+*.log
+*.code-workspace
+*.pyc
+/*.egg-info
+__pycache__/
+.coverage
+cov_html/
+.pytest_cache/
+webservices/

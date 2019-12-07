@@ -1,0 +1,58 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.22.0
+      authorization:
+      - ===HIDDEN===
+    method: GET
+    uri: https://www.googleapis.com/oauth2/v1/userinfo
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAC/3WOwU7DMBBE7/mKyGeI3QY3cU9EcKBShSpQ22MVksV2cWxr47QgxL9TJwJxYU8r
+        vTej+UzSlOiWLFMyYwVncyYWvCyF4PNCiIKTqyhAV2sTnbM2Bp0E9ICgsb6VkWSN6ybxBKhfNbSH
+        n0TAAUZi6w5iw/7SkD7Fiikh9Qns4T/qdRMGHJEKwfdLSo3imXROGhh6wMbZADbEBfT6I1/fMLYR
+        SvW0+r3Vn7+i1d2DzrFdqFXxuBHoX3S+65/v37a791m5Xx/lmXrlgsuOXk4bjGtqM04AS5Kv5BtV
+        DnGNMwEAAA==
+    headers:
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q049=":443"; ma=2592000,h3-Q048=":443";
+        ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 01 Nov 2019 07:14:50 GMT
+      Expires:
+      - Mon, 01 Jan 1990 00:00:00 GMT
+      Pragma:
+      - no-cache
+      Server:
+      - ESF
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      - Referer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

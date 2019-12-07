@@ -1,0 +1,48 @@
+language: python
+
+sudo: false
+dist: xenial
+
+cache:
+  pip: true
+
+python:
+  - "3.7"
+
+env:
+  global:
+    - TEST_DOMAIN_IP=127.0.0.1
+    - TEST_DATABASE_URL=postgresql://user:test@TEST_DOMAIN_IP:5432/willbuyer
+    - WILLORDERS_WS_DATABASE_URL=postgresql://user:test@TEST_DOMAIN_IP:5433/willorders
+    - PIPENV_DONT_LOAD_ENV=1
+    - PIPENV_VERBOSITY=-1
+    - PIPENV_IGNORE_VIRTUALENVS=1
+
+services:
+  - docker
+  
+before_install:
+  - pip install --upgrade pip
+  - pip install pipenv
+  - pipenv install --dev
+  - pipenv run webservices
+
+install:
+  - docker-compose -f docker-compose.test.yml up --build -d
+  - sleep 10
+
+script:
+  - docker-compose ps
+  - docker ps -s
+  - pipenv run test-cov
+
+after_script:
+  - docker-compose -f docker-compose.test.yml down
+
+after_success:
+  - pipenv run coveralls
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never

@@ -1,0 +1,2 @@
+-e git+https://github.com/willrp/willstores-ws.git@master#egg=willstores
+-e git+https://github.com/willrp/willorders-ws.git@master#egg=willorders
