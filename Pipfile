@@ -1,0 +1,38 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+click = "*"
+coveralls = "*"
+elasticsearch-dsl = "<6.0.0,>=5.0.0"
+factory-boy = "*"
+flake8 = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+responses = "*"
+vcrpy = "*"
+
+[packages]
+blinker = "*"
+flask = "*"
+flask-dance = {extras = ["sqla"],version = "*"}
+flask-login = "*"
+flask-restplus = "*"
+flask-talisman = "*"
+marshmallow = "*"
+python-dotenv = "*"
+psycopg2 = "*"
+requests = "*"
+sqlalchemy = "*"
+
+[requires]
+python_version = "3.7"
+
+[scripts]
+test = "pipenv run python commands.py test"
+test-cov = "pipenv run python commands.py test-cov"
+test-cov-html = "pipenv run python commands.py test-cov-html"
+webservices = "pip install -r webservices.txt --src webservices"
