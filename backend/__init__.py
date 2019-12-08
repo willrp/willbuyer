@@ -18,9 +18,13 @@ def create_app(flask_env=None):
         static_url_path="/frontend/dist"
     )
 
+    # WILL FIND A BETTER WAY TO ONLY EXECUTE INLINE SCRIPT FOR /API ENDPOINTS
     SELF = "\'self\'"
     csp = {
-        "default-src": SELF,
+        "default-src": [
+            SELF,
+            "\'unsafe-inline\'"  # ONLY TO SHOW SWAGGER UI INTERFACE
+        ],
         "script-src": [
             SELF,
             "\'unsafe-inline\'"  # ONLY TO SHOW SWAGGER UI INTERFACE
