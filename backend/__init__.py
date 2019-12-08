@@ -21,7 +21,10 @@ def create_app(flask_env=None):
     SELF = "\'self\'"
     csp = {
         "default-src": SELF,
-        "script-src": SELF,
+        "script-src": [
+            SELF,
+            "\'unsafe-inline\'"  # ONLY TO SHOW SWAGGER UI INTERFACE
+        ],
         "connect-src": SELF,
         "style-src": [
             SELF,
