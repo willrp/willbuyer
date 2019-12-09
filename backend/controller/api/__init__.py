@@ -14,7 +14,7 @@ authorizations = {
         "type": "oauth2",
         "flow": "authorizationCode",
         "authorizationUrl": "/auth/logout/"
-    },
+    }
 }
 
 api = Api(bpapi,

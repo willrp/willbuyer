@@ -12,7 +12,7 @@ def factory_session(willorders_ws_db_session):
     ProductFactory._meta.sqlalchemy_session = willorders_ws_db_session
     OrderProductFactory._meta.sqlalchemy_session = willorders_ws_db_session
 
-@pytest.mark.dev
+
 def test_delete(domain_url, auth_user, auth_session, es_create, willorders_ws_db_session):
     prod_list = es_create("products", 5)
     user_slug = auth_user.uuid_slug

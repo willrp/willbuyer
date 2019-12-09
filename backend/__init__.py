@@ -1,7 +1,8 @@
 import os
-from flask import Flask
+from flask import Flask, request
 from dotenv import load_dotenv, find_dotenv
 from flask_talisman import Talisman
+from werkzeug.contrib.fixers import ProxyFix
 
 CONFIG_NAME_MAPPER = {
     "development": "config.DevelopmentConfig",
@@ -17,6 +18,8 @@ def create_app(flask_env=None):
         static_folder="../frontend/dist",
         static_url_path="/frontend/dist"
     )
+
+    app.wsgi_app = ProxyFix(app.wsgi_app)
 
     SELF = "\'self\'"
     csp = {
@@ -45,7 +48,7 @@ def create_app(flask_env=None):
         "worker-src": "\'none\'"
     }
 
-    Talisman(app, content_security_policy=csp)
+    talisman = Talisman(app, content_security_policy=csp)
     load_dotenv(find_dotenv())
 
     envvar_flask_env = os.getenv("FLASK_ENV")
@@ -80,6 +83,15 @@ def create_app(flask_env=None):
 
     from backend.controller.frontend import bpfrontend
     app.register_blueprint(bpfrontend)
+
+    swagger_csp = dict(csp)
+    swagger_csp["default-src"] = [SELF, "\'unsafe-inline\'"]
+    swagger_csp["script-src"] = [SELF, "\'unsafe-inline\'"]
+
+    @app.before_request
+    def before_request_swagger():
+        if(request.path == "/api/"):
+            talisman.content_security_policy = swagger_csp
 
     @app.teardown_request
     def teardown_request(e):
