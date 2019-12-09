@@ -34,13 +34,13 @@ def test_user_controller_current(mocker, login_disabled_app):
     ]
 )
 def test_users_controller_current_error(mocker, login_disabled_app, test_url, error, status_code):
-    with mocker.patch("flask_login.utils._get_user", return_value=MagicMock(to_dict=MagicMock(side_effect=error))):
-        with login_disabled_app.test_client() as client:
-            response = client.get(
-                test_url
-            )
+    mocker.patch("flask_login.utils._get_user", return_value=MagicMock(to_dict=MagicMock(side_effect=error)))
+    with login_disabled_app.test_client() as client:
+        response = client.get(
+            test_url
+        )
 
-        data = json.loads(response.data)
-        ErrorSchema().load(data)
+    data = json.loads(response.data)
+    ErrorSchema().load(data)
 
-        assert response.status_code == status_code
+    assert response.status_code == status_code

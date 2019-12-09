@@ -144,14 +144,14 @@ def test_login_controller_user_logged_in(flask_app):
     ]
 )
 def test_login_controller_missing_mismatching(mocker, flask_app, error):
-    with mocker.patch("flask_dance.consumer.oauth2.redirect", side_effect=error):
-        with flask_app.test_client() as client:
-            response = client.get(
-                "auth/google/authorized"
-            )
+    mocker.patch("flask_dance.consumer.oauth2.redirect", side_effect=error)
+    with flask_app.test_client() as client:
+        response = client.get(
+            "auth/google/authorized"
+        )
 
-        assert re.search(r"google_login", response.headers["Location"]) is not None
-        assert response.status_code == 302
+    assert re.search(r"google_login", response.headers["Location"]) is not None
+    assert response.status_code == 302
 
 
 def test_login_controller_invalid_grant(monkeypatch, mocker, flask_app, test_vcr):
@@ -159,11 +159,11 @@ def test_login_controller_invalid_grant(monkeypatch, mocker, flask_app, test_vcr
     monkeypatch.setattr(bplogin, "storage", storage)
 
     with test_vcr.use_cassette("auth_google_token_revoke_fake.yml"):
-        with mocker.patch("flask_dance.consumer.oauth2.redirect", side_effect=InvalidGrantError()):
-            with flask_app.test_client() as client:
-                response = client.get(
-                    "auth/google/authorized"
-                )
+        mocker.patch("flask_dance.consumer.oauth2.redirect", side_effect=InvalidGrantError())
+        with flask_app.test_client() as client:
+            response = client.get(
+                "auth/google/authorized"
+            )
 
         assert re.search(r"google_login", response.headers["Location"]) is not None
         assert response.status_code == 302
@@ -176,13 +176,13 @@ def test_login_controller_invalid_grant(monkeypatch, mocker, flask_app, test_vcr
     ]
 )
 def test_login_controller_error(mocker, flask_app, test_url, error, status_code):
-    with mocker.patch("flask_login.utils._get_user", side_effect=error):
-        with flask_app.test_client() as client:
-            response = client.get(
-                test_url
-            )
+    mocker.patch("flask_login.utils._get_user", side_effect=error)
+    with flask_app.test_client() as client:
+        response = client.get(
+            test_url
+        )
 
-        data = json.loads(response.data)
-        ErrorSchema().load(data)
+    data = json.loads(response.data)
+    ErrorSchema().load(data)
 
-        assert response.status_code == status_code
+    assert response.status_code == status_code
