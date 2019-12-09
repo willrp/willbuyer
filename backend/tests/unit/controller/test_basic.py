@@ -7,6 +7,15 @@ def test_basic_front_end(flask_app):
     assert response.status_code == 200
 
 
+def test_swagger_api(flask_app):
+    with flask_app.test_client() as client:
+        response = client.get(
+            "/api/"
+        )
+
+    assert response.status_code == 200
+
+
 def test_basic_front_end_next(flask_app):
     with flask_app.test_client() as client:
         response = client.get(
