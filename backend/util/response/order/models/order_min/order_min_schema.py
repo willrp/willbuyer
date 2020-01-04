@@ -5,7 +5,6 @@ from ..price.price_schema import PriceSchema
 
 class OrderMinSchema(Schema):
     slug = fields.String(required=True)
-    user_slug = fields.String(required=True)
     product_types = fields.Integer(required=True)
     items_amount = fields.Integer(required=True)
     total = fields.Nested(PriceSchema, required=True)

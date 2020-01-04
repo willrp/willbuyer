@@ -1,0 +1,68 @@
+/*=========================================================================
+    NProgress bar
+=========================================================================*/
+#nprogress .bar {
+    background: #FFC000;
+    height: 3px;
+}
+  
+#nprogress .peg {
+    box-shadow: 0 0 10px #FFC000, 0 0 5px #FFC000;
+}
+
+/*=========================================================================
+    React-dates
+=========================================================================*/
+.CalendarDay__selected_span {
+    background: deepskyblue;
+    color: white;
+    border: 1px solid #E4E7EC;
+}
+
+.CalendarDay__selected_span:hover,
+.CalendarDay__default:hover {
+    background: lightskyblue;
+    color: black;
+    border: 1px solid #E4E7EC;
+}
+
+.CalendarDay__selected,
+.CalendarDay__selected:hover {
+    background: #0021b4;
+    color: white;
+    border: 1px solid #E4E7EC;
+}
+
+.CalendarDay__hovered_span:hover,
+.CalendarDay__hovered_span {
+    background: deepskyblue;
+    color: white;
+    border: 1px solid #E4E7EC;
+}
+
+.DateInput_input {
+    padding: 0.5em;
+    text-align: center;
+}
+
+.DateInput_input__focused {
+    border-bottom-color: deepskyblue;
+}
+
+.DateRangePickerInput_arrow {
+    color: deepskyblue;
+}
+
+.DateRangePickerInput_arrow>.icon {
+    margin: 0
+}
+
+.DateRangePickerClear_button.DateRangePickerClear_button.DateRangePickerClear_button {
+    background: lightskyblue;
+    color: black;
+    margin-left: 0.1em;
+}
+
+.DateRangePickerClear_button.DateRangePickerClear_button.DateRangePickerClear_button:hover {
+    background: deepskyblue;
+}

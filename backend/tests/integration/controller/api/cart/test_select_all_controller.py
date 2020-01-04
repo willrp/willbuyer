@@ -3,11 +3,14 @@ from flask import json
 from json.decoder import JSONDecodeError
 
 from backend.util.response.cart import CartSchema
-from backend.util.response.error import ErrorSchema
 
 
-def test_select_all_controller(flask_app, auth_user):
-    with flask_app.test_client(user=auth_user) as client:
+def test_select_all_controller(flask_app, es_create):
+    prod_list = es_create("products", 2)
+    item_id = prod_list[0].meta["id"]
+    item_id_2 = prod_list[1].meta["id"]
+
+    with flask_app.test_client() as client:
         response = client.get(
             "api/cart"
         )
@@ -19,9 +22,9 @@ def test_select_all_controller(flask_app, auth_user):
 
         with client.session_transaction() as sess:
             assert "cart" not in sess
-            sess["cart"] = {"test": 1, "test2": 2}
-            assert sess["cart"]["test"] == 1
-            assert sess["cart"]["test2"] == 2
+            sess["cart"] = {item_id: 1, item_id_2: 2}
+            assert sess["cart"][item_id] == 1
+            assert sess["cart"][item_id_2] == 2
 
         response = client.get(
             "api/cart"
@@ -31,17 +34,6 @@ def test_select_all_controller(flask_app, auth_user):
         CartSchema().load(data)
         assert response.status_code == 200
 
-        for item in data["item_list"]:
-            assert item["item_id"] in ["test", "test2"]
+        for item in data["products"]:
+            assert item["id"] in [item_id, item_id_2]
             assert item["amount"] in [1, 2]
-
-
-def test_select_all_controller_unauthorized(flask_app):
-    with flask_app.test_client() as client:
-        response = client.get(
-            "api/cart",
-        )
-
-    data = json.loads(response.data)
-    ErrorSchema().load(data)
-    assert response.status_code == 401

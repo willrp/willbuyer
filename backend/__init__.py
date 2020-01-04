@@ -24,7 +24,6 @@ def create_app(flask_env=None):
     SELF = "\'self\'"
     csp = {
         "default-src": SELF,
-        "script-src": SELF,
         "connect-src": SELF,
         "style-src": [
             SELF,
@@ -47,6 +46,8 @@ def create_app(flask_env=None):
         "frame-src": "\'none\'",
         "worker-src": "\'none\'"
     }
+
+    csp["script-src"] = [SELF, "\'unsafe-eval\'"] if os.getenv("FLASK_ENV") != "production" else SELF
 
     talisman = Talisman(app, content_security_policy=csp)
     load_dotenv(find_dotenv())
@@ -84,13 +85,12 @@ def create_app(flask_env=None):
     from backend.controller.frontend import bpfrontend
     app.register_blueprint(bpfrontend)
 
-    swagger_csp = dict(csp)
-    swagger_csp["default-src"] = [SELF, "\'unsafe-inline\'"]
-    swagger_csp["script-src"] = [SELF, "\'unsafe-inline\'"]
-
     @app.before_request
     def before_request_swagger():
         if(request.path == "/api/"):
+            swagger_csp = dict(csp)
+            swagger_csp["default-src"] = [SELF, "\'unsafe-inline\'"]
+            swagger_csp["script-src"] = [SELF, "\'unsafe-inline\'"]
             talisman.content_security_policy = swagger_csp
 
     @app.teardown_request

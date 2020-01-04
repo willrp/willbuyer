@@ -3,7 +3,6 @@ from flask import session
 from uuid import uuid4
 
 from backend.service import CartService
-from backend.errors.no_content_error import NoContentError
 from backend.errors.request_error import ValidationError
 
 
@@ -41,9 +40,7 @@ def test_cart_service_remove_item(service, flask_app):
         assert result is True
         assert item_id not in service.to_dict()
         assert service.to_dict() == {}
-
-        with pytest.raises(NoContentError):
-            assert service.to_list() == []
+        assert service.to_list() == []
 
 
 def test_cart_service_remove_item_unregistered(service, flask_app):
@@ -119,11 +116,9 @@ def test_cart_service_to_list_empty(service, flask_app):
     with flask_app.test_request_context():
         session["cart"] = dict()
 
-        with pytest.raises(NoContentError):
-            assert service.to_list() == []
+        assert service.to_list() == []
 
 
 def test_cart_service_to_list_non_initialized(service, flask_app):
     with flask_app.test_request_context():
-        with pytest.raises(NoContentError):
-            assert service.to_list() == []
+        assert service.to_list() == []

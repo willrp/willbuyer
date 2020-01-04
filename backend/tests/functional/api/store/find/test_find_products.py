@@ -4,17 +4,17 @@ from uuid import uuid4
 from json.decoder import JSONDecodeError
 
 from backend.util.response.store.search_products_results import SearchProductsResultsSchema
-from backend.util.response.error import ErrorSchema
 
 
-def test_find_products(domain_url, es_create, auth_session):
+def test_find_products(domain_url, es_create):
     arg = str(uuid4())
     es_create("products", 5, brand=arg)
     es_create("products", 5, kind=arg)
 
     for ftype in ["brand", "kind"]:
-        response = auth_session.post(
-            domain_url + "/api/store/find/%s/%s/1" % (ftype, arg)
+        response = requests.post(
+            domain_url + "/api/store/find/%s/%s/1" % (ftype, arg),
+            verify=False
         )
 
         data = response.json()
@@ -22,8 +22,9 @@ def test_find_products(domain_url, es_create, auth_session):
         assert response.status_code == 200
         assert len(data["products"]) == 5
 
-    response = auth_session.post(
-        domain_url + "/api/store/find/search/%s/1" % (arg)
+    response = requests.post(
+        domain_url + "/api/store/find/search/%s/1" % (arg),
+        verify=False
     )
 
     data = response.json()
@@ -32,7 +33,7 @@ def test_find_products(domain_url, es_create, auth_session):
     assert len(data["products"]) == 10
 
     for ftype in ["brand", "kind"]:        
-        response = auth_session.post(
+        response = requests.post(
             domain_url + "/api/store/find/%s/%s/1" % (ftype, arg),
             json={
                 "pricerange": {
@@ -40,7 +41,8 @@ def test_find_products(domain_url, es_create, auth_session):
                     "max": 500
                 },
                 "pagesize": 1
-            }
+            },
+            verify=False
         )
 
         data = response.json()
@@ -48,7 +50,7 @@ def test_find_products(domain_url, es_create, auth_session):
         assert response.status_code == 200
         assert len(data["products"]) == 1
 
-    response = auth_session.post(
+    response = requests.post(
         domain_url + "/api/store/find/search/%s/1" % (arg),
         json={
             "pricerange": {
@@ -56,7 +58,8 @@ def test_find_products(domain_url, es_create, auth_session):
                 "max": 500
             },
             "pagesize": 1
-        }
+        },
+        verify=False
     )
 
     data = response.json()
@@ -65,8 +68,9 @@ def test_find_products(domain_url, es_create, auth_session):
     assert len(data["products"]) == 1
 
     for ftype in ["brand", "kind"]:
-        response = auth_session.post(
-            domain_url + "/api/store/find/%s/%s/10" % (ftype, arg)
+        response = requests.post(
+            domain_url + "/api/store/find/%s/%s/10" % (ftype, arg),
+            verify=False
         )
 
         with pytest.raises(JSONDecodeError):
@@ -74,8 +78,9 @@ def test_find_products(domain_url, es_create, auth_session):
 
         assert response.status_code == 204
 
-    response = auth_session.post(
-        domain_url + "/api/store/find/search/%s/10" % (arg)
+    response = requests.post(
+        domain_url + "/api/store/find/search/%s/10" % (arg),
+        verify=False
     )
 
     with pytest.raises(JSONDecodeError):
@@ -84,14 +89,15 @@ def test_find_products(domain_url, es_create, auth_session):
     assert response.status_code == 204
 
     for ftype in ["brand", "kind"]:
-        response = auth_session.post(
+        response = requests.post(
             domain_url + "/api/store/find/%s/%s/1" % (ftype, arg),
             json={
                 "pricerange": {
                     "min": 10000,
                     "max": 20000
                 }
-            }
+            },
+            verify=False
         )
 
         with pytest.raises(JSONDecodeError):
@@ -99,14 +105,15 @@ def test_find_products(domain_url, es_create, auth_session):
 
         assert response.status_code == 204
 
-    response = auth_session.post(
+    response = requests.post(
         domain_url + "/api/store/find/search/%s/1" % (arg),
         json={
             "pricerange": {
                 "min": 10000,
                 "max": 20000
             }
-        }
+        },
+        verify=False
     )
 
     with pytest.raises(JSONDecodeError):
@@ -115,8 +122,9 @@ def test_find_products(domain_url, es_create, auth_session):
     assert response.status_code == 204
 
     for ftype in ["brand", "kind"]:
-        response = auth_session.post(
-            domain_url + "/api/store/find/%s/%s/1" % (ftype, str(uuid4()))
+        response = requests.post(
+            domain_url + "/api/store/find/%s/%s/1" % (ftype, str(uuid4())),
+            verify=False
         )
 
         with pytest.raises(JSONDecodeError):
@@ -124,22 +132,12 @@ def test_find_products(domain_url, es_create, auth_session):
 
         assert response.status_code == 204
 
-    response = auth_session.post(
-        domain_url + "/api/store/find/search/%s/1" % (str(uuid4()))
+    response = requests.post(
+        domain_url + "/api/store/find/search/%s/1" % (str(uuid4())),
+        verify=False
     )
 
     with pytest.raises(JSONDecodeError):
         response.json()
 
     assert response.status_code == 204
-
-
-def test_find_products_unauthorized(domain_url):
-    response = requests.post(
-        domain_url + "/api/store/find/brand/1/1",
-        verify=False
-    )
-
-    data = response.json()
-    ErrorSchema().load(data)
-    assert response.status_code == 401

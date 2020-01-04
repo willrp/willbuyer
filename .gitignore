@@ -8,3 +8,7 @@ __pycache__/
 cov_html/
 .pytest_cache/
 webservices/
+flow-typed/
+dist/
+node_modules/
+.eslintignore

@@ -1,7 +1,7 @@
 import os
 from flask import current_app as app
 from flask_restplus import Namespace, Resource
-from flask_login import login_required
+from flask_login import login_required, current_user
 from requests import get
 
 from backend.util.response.order.order import OrderResponse
@@ -35,7 +35,9 @@ class SelectBySlugController(Resource):
     def get(self, slug):
         """Order information."""
         try:
-            req = get("%s/api/order/%s" % (self.__url, slug), headers=self.__headers)
+            user_slug = current_user.uuid_slug
+
+            req = get("%s/api/order/%s/%s" % (self.__url, user_slug, slug), headers=self.__headers)
             req.raise_for_status()
 
             jsonsend = OrderResponse.marshall_json(req.json())

@@ -58,14 +58,14 @@ def response_json():
     }
 
 
-def test_gender_controller(login_disabled_app, willstores_ws, request_json, response_json):
+def test_gender_controller(flask_app, willstores_ws, request_json, response_json):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=200,
             json=response_json
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/gender/test"
             )
@@ -75,7 +75,7 @@ def test_gender_controller(login_disabled_app, willstores_ws, request_json, resp
         assert response.status_code == 200
         assert len(data["discounts"]) == 1
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/gender/test",
                 json=request_json
@@ -87,13 +87,13 @@ def test_gender_controller(login_disabled_app, willstores_ws, request_json, resp
         assert len(data["discounts"]) == 1
 
 
-def test_gender_controller_no_content(login_disabled_app, willstores_ws, request_json):
+def test_gender_controller_no_content(flask_app, willstores_ws, request_json):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=204
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/gender/test"
             )
@@ -102,7 +102,7 @@ def test_gender_controller_no_content(login_disabled_app, willstores_ws, request
         with pytest.raises(JSONDecodeError):
             json.loads(response.data)
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/gender/test",
                 json=request_json
@@ -113,8 +113,8 @@ def test_gender_controller_no_content(login_disabled_app, willstores_ws, request
             json.loads(response.data)
 
 
-def test_gender_controller_invalid_json(login_disabled_app, willstores_ws, request_json):
-    with login_disabled_app.test_client() as client:
+def test_gender_controller_invalid_json(flask_app, willstores_ws, request_json):
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/gender/test",
             json="notjson"
@@ -127,7 +127,7 @@ def test_gender_controller_invalid_json(login_disabled_app, willstores_ws, reque
     invalid_amount = deepcopy(request_json)
     invalid_amount.update(amount=0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/gender/test",
             json=invalid_amount
@@ -170,14 +170,14 @@ def test_gender_controller_error(mocker, get_request_function, method, http_meth
         ("/api/store/gender/test", 504)
     ]
 )
-def test_gender_controller_http_error(login_disabled_app, willstores_ws, json_error_recv, test_url, status_code):
+def test_gender_controller_http_error(flask_app, willstores_ws, json_error_recv, test_url, status_code):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=status_code,
             json=json_error_recv
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 test_url
             )

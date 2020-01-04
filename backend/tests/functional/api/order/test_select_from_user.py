@@ -47,10 +47,6 @@ def test_select_from_user(domain_url, auth_user, auth_session, es_create, willor
     for slug in order_slug_list:
         assert slug in [obj.uuid_slug for obj in obj_list]
 
-    user_slug_list = [order["user_slug"] for order in data["orders"]]
-    for slug in user_slug_list:
-        assert slug == user_slug
-
     for order in data["orders"]:
         if order["slug"] == obj_list[0].uuid_slug:
             assert order["product_types"] == 5

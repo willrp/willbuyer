@@ -1,7 +1,7 @@
 import os
 from flask import current_app as app
 from flask_restplus import Namespace, Resource
-from flask_login import login_required
+from flask_login import login_required, current_user
 from requests import delete
 
 from backend.util.response.error import ErrorResponse
@@ -33,7 +33,9 @@ class DeleteController(Resource):
     def delete(self, slug):
         """Order delete."""
         try:
-            req = delete("%s/api/order/delete/%s" % (self.__url, slug), headers=self.__headers)
+            user_slug = current_user.uuid_slug
+
+            req = delete("%s/api/order/delete/%s/%s" % (self.__url, user_slug, slug), headers=self.__headers)
             req.raise_for_status()
 
             return {}, req.status_code

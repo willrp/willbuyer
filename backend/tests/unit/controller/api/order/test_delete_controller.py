@@ -2,11 +2,14 @@ import pytest
 import responses
 import re
 from flask import json
+from unittest.mock import MagicMock
 
 from backend.util.response.error import ErrorSchema
 
 
-def test_delete_controller(login_disabled_app, willorders_ws):
+def test_delete_controller(mocker, login_disabled_app, willorders_ws):
+    mocker.patch("flask_login.utils._get_user", return_value=MagicMock(uuid_slug="test"))
+
     with responses.RequestsMock() as rsps:
         rsps.add(responses.DELETE, re.compile(willorders_ws),
             status=200,
@@ -34,7 +37,9 @@ def test_delete_controller(login_disabled_app, willorders_ws):
         ("api/order/delete/WILLrogerPEREIRAslugBR", 504),
     ]
 )
-def test_select_by_slug_controller_http_error(login_disabled_app, willorders_ws, json_error_recv, test_url, status_code):
+def test_select_by_slug_controller_http_error(mocker, login_disabled_app, willorders_ws, json_error_recv, test_url, status_code):
+    mocker.patch("flask_login.utils._get_user", return_value=MagicMock(uuid_slug="test"))
+
     with responses.RequestsMock() as rsps:
         rsps.add(responses.DELETE, re.compile(willorders_ws),
             status=status_code,

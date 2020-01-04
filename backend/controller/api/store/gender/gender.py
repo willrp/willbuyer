@@ -1,7 +1,6 @@
 import os
 from flask_restplus import Namespace, Resource
 from flask import current_app as app
-from flask_login import login_required
 from requests import post
 
 from backend.util.request.store.gender_request import GenderRequest
@@ -25,8 +24,6 @@ class GenderController(Resource):
         self.__url = app.config["WILLSTORES_WS"]
         self.__headers = {"Authorization": "Bearer %s" % os.getenv("ACCESS_TOKEN")}
 
-    @login_required
-    @genderNS.doc(security=["login"])
     @genderNS.param("gender", description="The desired gender, 'Men' or 'Women'", _in="path", required=True)
     @genderNS.param("payload", description="Optional", _in="body", required=False)
     @genderNS.expect(REQUESTMODEL)

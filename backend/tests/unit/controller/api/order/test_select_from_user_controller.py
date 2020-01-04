@@ -30,7 +30,6 @@ def response_json():
         "orders": [
             {
                 "slug": "slug",
-                "user_slug": "user_slug",
                 "product_types": 0,
                 "items_amount": 0,
                 "total": {
@@ -69,7 +68,6 @@ def test_select_from_user_slug_controller(mocker, login_disabled_app, willorders
 
         for order in data["orders"]:
             assert order["slug"] == "slug"
-            assert order["user_slug"] == "user_slug"
             assert order["product_types"] == 0
             assert order["items_amount"] == 0
             assert order["total"]["outlet"] == 10.55

@@ -1,7 +1,8 @@
 from flask_restplus import fields
 
+from .models.product import ProductResponse
+from .models.price import PriceResponse
 from .cart_schema import CartSchema
-from .item_response import ItemResponse
 
 
 class CartResponse(object):
@@ -10,7 +11,8 @@ class CartResponse(object):
         return api.model(
             name,
             {
-                "item_list": fields.List(fields.Nested(ItemResponse.get_model(api, "CartItemOut")))
+                "products": fields.List(fields.Nested(ProductResponse.get_model(api, "ProductsCartOut"))),
+                "total": fields.Nested(PriceResponse.get_model(api, "TotalCartOut"))
             }
         )
 

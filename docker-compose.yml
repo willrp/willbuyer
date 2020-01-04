@@ -6,6 +6,7 @@ services:
         restart: unless-stopped
         volumes:
             - ./backend:/usr/src/backend
+            - ./frontend:/usr/src/frontend
         depends_on:
             - db
             - willstores

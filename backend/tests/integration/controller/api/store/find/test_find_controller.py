@@ -4,16 +4,15 @@ from uuid import uuid4
 from json.decoder import JSONDecodeError
 
 from backend.util.response.store.search_results import SearchResultsSchema
-from backend.util.response.error import ErrorSchema
 
 
-def test_find_controller(flask_app, es_create, auth_user):
+def test_find_controller(flask_app, es_create):
     arg = str(uuid4())
     es_create("products", 5, brand=arg)
     es_create("products", 5, kind=arg)
 
     for ftype in ["brand", "kind"]:
-        with flask_app.test_client(user=auth_user) as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/%s" % (ftype, arg)
             )
@@ -23,7 +22,7 @@ def test_find_controller(flask_app, es_create, auth_user):
         assert response.status_code == 200
         assert data["total"] == 5
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/search/%s" % (arg)
         )
@@ -34,7 +33,7 @@ def test_find_controller(flask_app, es_create, auth_user):
     assert data["total"] == 10
 
     for ftype in ["brand", "kind"]:
-        with flask_app.test_client(user=auth_user) as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/%s" % (ftype, arg),
                 json={
@@ -50,7 +49,7 @@ def test_find_controller(flask_app, es_create, auth_user):
         assert response.status_code == 200
         assert data["total"] == 5
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/search/%s" % (arg),
             json={
@@ -67,7 +66,7 @@ def test_find_controller(flask_app, es_create, auth_user):
     assert data["total"] == 10
 
     for ftype in ["brand", "kind"]:
-        with flask_app.test_client(user=auth_user) as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/%s" % (ftype, arg),
                 json={
@@ -83,7 +82,7 @@ def test_find_controller(flask_app, es_create, auth_user):
 
         assert response.status_code == 204
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/search/%s" % (arg),
             json={
@@ -100,7 +99,7 @@ def test_find_controller(flask_app, es_create, auth_user):
     assert response.status_code == 204
 
     for ftype in ["brand", "kind"]:
-        with flask_app.test_client(user=auth_user) as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/%s" % (ftype, str(uuid4()))
             )
@@ -110,7 +109,7 @@ def test_find_controller(flask_app, es_create, auth_user):
 
         assert response.status_code == 204
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/search/%s" % (str(uuid4()))
         )
@@ -119,14 +118,3 @@ def test_find_controller(flask_app, es_create, auth_user):
         json.loads(response.data)
 
     assert response.status_code == 204
-
-
-def test_find_controller_unauthorized(flask_app):
-    with flask_app.test_client() as client:
-        response = client.post(
-            "api/store/find/search/1",
-        )
-
-    data = json.loads(response.data)
-    ErrorSchema().load(data)
-    assert response.status_code == 401

@@ -1,6 +1,8 @@
 # WillBuyer [![Build Status](https://travis-ci.com/willrp/willbuyer.svg?branch=master)](https://travis-ci.com/willrp/willbuyer) [![Coverage Status](https://coveralls.io/repos/github/willrp/willbuyer/badge.svg?branch=master)](https://coveralls.io/github/willrp/willbuyer?branch=master)
 
-WillBuyer is a demonstration project to show and sell other e-commerce platforms' goods. It is a Service Oriented Architecture and Rich Internet application, build using the MVCS architectural pattern (Model View Controller Service). The merchandise data WS comes from [ASOS Online Shopping](https://www.asos.com), outlet sections.
+WillBuyer is a demonstration project to show and sell other e-commerce platforms' goods. It is a Service Oriented Architecture and Rich Internet application, build using the MVCS architectural pattern (Model View Controller Service),and a responsive design, for any device. The merchandise data comes from [ASOS Online Shopping](https://www.asos.com), outlet sections.
+
+[Click here to access the application.](http://willbuyer.herokuapp.com)
 
 This project uses DevOps practices, it's tested on TravisCI, coverage checked by Coveralls and automatically deployed on Heroku. In this application, the following tests are made:
 
@@ -8,7 +10,7 @@ This project uses DevOps practices, it's tested on TravisCI, coverage checked by
 * Integration tests;
 * Functional tests.
 
-You can access the API documentation [here](http://willbuyer.herokuapp.com/api). The application Frontend will be built soon.
+The application is available [in this link](http://willbuyer.herokuapp.com). You can also access the API documentation [here](http://willbuyer.herokuapp.com/api).
 Since it uses free dynos, it might take some seconds for the first access. Thank you for understanding.
 
 ## Own Dependent Web services
@@ -18,6 +20,7 @@ Since it uses free dynos, it might take some seconds for the first access. Thank
 
 ## Back end built with
 
+* [Asyncio](https://docs.python.org/3/library/asyncio.html): A Python library to write concurrent code using the async/await syntax;
 * [Blinker](https://github.com/jek/blinker): A fast Python in-process signal/event dispatching system;
 * [Flask](http://flask.pocoo.org): Web applications framework for Python. For managing the routes and web services. For project backend control and model layers;
 * [Flask-Dance](https://github.com/singingwolfboy/flask-dance): Authentication with Oauth2;
@@ -35,13 +38,43 @@ Since it uses free dynos, it might take some seconds for the first access. Thank
 
 ## Front end built with
 
-COMING SOON
+* [Axios](https://github.com/mzabriskie/axios): For making frontend HTTP requests with AJAX;
+* [Babili Minify Webpack Plugin](https://github.com/webpack-contrib/babili-webpack-plugin): For JS and ES6 code minification;
+* [Clean for Webpack](https://github.com/johnagan/clean-webpack-plugin): A webpack plugin to remove/clean your build folder(s) before building;
+* [CSS](https://www.w3schools.com/css): An HTML styler. To style data shown to the user. For project frontend view layer;
+* [ECMAScript](https://tc39.github.io/ecma262/): A script-language, for frontend programming, with new syntax for writing complex applications. Works very well with ReactJS;
+* [Emotion](https://github.com/emotion-js/emotion): A performant and flexible CSS-in-JS library;
+* [Flow](https://flow.org): Static type checker for Javascript;
+* [HTML](https://www.w3schools.com/html): A markup language to build webpages. To show data to the user. For project frontend view layer;
+* [HTML Webpack Plugin](https://github.com/jantimon/html-webpack-plugin): Plugin that simplifies creation of HTML files to serve your bundles;
+* [Javascript](https://www.javascript.com): A web browser client-side programming language. To process data at client side, control user events and struture the view. For project frontend control layer;
+* [Lodash](https://github.com/lodash/lodash): A modern JavaScript utility library delivering modularity, performance, & extras;
+* [MiniCSS Extract Plugin](https://github.com/webpack-contrib/mini-css-extract-plugin): Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. It supports On-Demand-Loading of CSS and SourceMaps;
+* [Moment](https://github.com/moment/moment/): Parse, validate, manipulate, and display dates and times in JavaScript;
+* [Npm](https://www.npmjs.com): A package manager for the JavaScript programming language and related. Bundled with NodeJS;
+* [Optimize CSS Assets Webpack Plugin](https://github.com/NMFR/optimize-css-assets-webpack-plugin): A Webpack plugin to optimize and minimize CSS assets;
+* [Query-String](https://github.com/sindresorhus/query-string): Parse and stringify URL query strings;
+* [RC Slider](https://github.com/schrodinger/rc-slider): React slider;
+* [ReactJS](https://facebook.github.io/react): A Javascript library for building user interfaces. To struture the view on components. For project frontend control and layer;
+* [React-Dates](https://npmjs.org/package/react-dates): An easily internationalizable, mobile-friendly datepicker library for the Web;
+* [React Image Gallery](https://github.com/xiaolin/react-image-gallery): React image gallery component with thumbnail support; 
+* [React-NProgress](https://www.npmjs.com/package/react-nprogress): Slim progress bars for Rich Internet Applications;
+* [React-Router](https://github.com/ReactTraining/react-router): Declarative routing for ReactJS. For state URL management;
+* [React Slick](https://github.com/akiran/react-slick): React carousel component;
+* [React-Toastify](https://github.com/fkhadra/react-toastify): Notifications for ReactJS;
+* [Semantic-UI-React](https://github.com/Semantic-Org/Semantic-UI-React): A framework that helps create beautiful, responsive layouts using human-friendly HTML, integrated with ReactJS;
+* [Webpack](https://webpack.js.org/): A JavaScript module bundler. Bundles JS, CSS and images, as well as gives support for other plugins.
 
 ## Development tools
 
 * [Click](https://github.com/pallets/click): Python composable command line interface toolkit;
 * [Docker](https://www.docker.com/): Performs web services containerization, helping on application development, integration tests and production. Boosts production by getting everything started easily and isolated, and reloading the application on code change;
-* [PyOpenSSL](https://github.com/pyca/pyopenssl): A Python wrapper around the OpenSSL library.
+* [PyOpenSSL](https://github.com/pyca/pyopenssl): A Python wrapper around the OpenSSL library;
+* [React Developer Tools](https://github.com/facebook/react-devtools): To inspect the React component hierarchy including props and state. Also helps inpecting if the build is production ready. Browser extension needs to be installed;
+* [React Hot Loader](https://github.com/gaearon/react-hot-loader): A tool to update your application while developing, automatically, without losing state. Boosts production and allow to tweak React components in real time;
+* [Webpack Bundle Analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer): Visualize size of webpack output files with an interactive zoomable treemap;
+* [Webpack Dev Server](https://github.com/webpack/webpack-dev-server): Use Webpack with a development server;
+* [Write File Webpack Plugin](https://github.com/gajus/write-file-webpack-plugin): Forces webpack-dev-server to write bundle files to the file system.
 
 ## Testing tools
 

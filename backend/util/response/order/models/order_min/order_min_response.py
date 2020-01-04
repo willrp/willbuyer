@@ -10,7 +10,6 @@ class OrderMinResponse(object):
             name,
             {
                 "slug": fields.String(required=True),
-                "user_slug": fields.String(required=True),
                 "product_types": fields.Integer(required=True),
                 "items_amount": fields.Integer(required=True),
                 "total": fields.Nested(PriceResponse.get_model(api, "PriceOut"), required=True),
