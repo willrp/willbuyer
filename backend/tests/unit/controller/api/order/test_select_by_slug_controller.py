@@ -2,6 +2,7 @@ import pytest
 import responses
 import re
 from flask import json
+from unittest.mock import MagicMock
 from requests import ConnectionError
 
 from backend.util.response.order.order import OrderSchema, OrderResponse
@@ -12,7 +13,6 @@ from backend.util.response.error import ErrorSchema
 def response_json():
     return {
         "slug": "slug",
-        "user_slug": "user_slug",
         "product_types": 0,
         "items_amount": 0,
         "total": {
@@ -38,7 +38,9 @@ def response_json():
     }
 
 
-def test_select_by_slug_controller(login_disabled_app, willorders_ws, response_json):
+def test_select_by_slug_controller(mocker, login_disabled_app, willorders_ws, response_json):
+    mocker.patch("flask_login.utils._get_user", return_value=MagicMock(uuid_slug="test"))
+
     with responses.RequestsMock() as rsps:
         rsps.add(responses.GET, re.compile(willorders_ws),
             status=200,
@@ -54,13 +56,14 @@ def test_select_by_slug_controller(login_disabled_app, willorders_ws, response_j
         OrderSchema().load(data)
         assert response.status_code == 200
         assert data["slug"] == "slug"
-        assert data["user_slug"] == "user_slug"
         assert data["product_types"] == 0
         assert data["items_amount"] == 0
         assert len(data["products"]) == 1
 
 
-def test_select_by_slug_controller_invalid_slug(login_disabled_app):
+def test_select_by_slug_controller_invalid_slug(mocker, login_disabled_app):
+    mocker.patch("flask_login.utils._get_user", return_value=MagicMock(uuid_slug="test"))
+
     with login_disabled_app.test_client() as client:
         response = client.get(
             "api/order/invalidslug"
@@ -80,6 +83,7 @@ def test_select_by_slug_controller_invalid_slug(login_disabled_app):
     ]
 )
 def test_select_by_slug_controller_error(mocker, willorders_ws, get_request_function, response_json, method, http_method, test_url, error, status_code):
+    mocker.patch("flask_login.utils._get_user", return_value=MagicMock(uuid_slug="test"))
     mocker.patch.object(OrderResponse, method, side_effect=error)
 
     with responses.RequestsMock() as rsps:
@@ -111,7 +115,9 @@ def test_select_by_slug_controller_error(mocker, willorders_ws, get_request_func
         ("api/order/WILLrogerPEREIRAslugBR", 504),
     ]
 )
-def test_select_by_slug_controller_http_error(login_disabled_app, willorders_ws, json_error_recv, test_url, status_code):
+def test_select_by_slug_controller_http_error(mocker, login_disabled_app, willorders_ws, json_error_recv, test_url, status_code):
+    mocker.patch("flask_login.utils._get_user", return_value=MagicMock(uuid_slug="test"))
+
     with responses.RequestsMock() as rsps:
         rsps.add(responses.GET, re.compile(willorders_ws),
             status=status_code,

@@ -49,14 +49,14 @@ def response_json():
         ("search")
     ]
 )
-def test_find_products_controller(login_disabled_app, willstores_ws, request_json, response_json, ftype):
+def test_find_products_controller(flask_app, willstores_ws, request_json, response_json, ftype):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=200,
             json=response_json
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/test/1" % ftype
             )
@@ -66,7 +66,7 @@ def test_find_products_controller(login_disabled_app, willstores_ws, request_jso
         assert response.status_code == 200
         assert len(data["products"]) == 1
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/test/1" % ftype,
                 json=request_json
@@ -86,13 +86,13 @@ def test_find_products_controller(login_disabled_app, willstores_ws, request_jso
         ("search")
     ]
 )
-def test_find_products_controller_no_content(login_disabled_app, willstores_ws, request_json, ftype):
+def test_find_products_controller_no_content(flask_app, willstores_ws, request_json, ftype):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=204
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/test/1" % ftype
             )
@@ -101,7 +101,7 @@ def test_find_products_controller_no_content(login_disabled_app, willstores_ws, 
         with pytest.raises(JSONDecodeError):
             json.loads(response.data)
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/find/%s/test/1" % ftype,
                 json=request_json
@@ -112,8 +112,8 @@ def test_find_products_controller_no_content(login_disabled_app, willstores_ws, 
             json.loads(response.data)
 
 
-def test_find_products_controller_invalid_ftype(login_disabled_app):
-    with login_disabled_app.test_client() as client:
+def test_find_products_controller_invalid_ftype(flask_app):
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/invalid/test/1"
         )
@@ -123,8 +123,8 @@ def test_find_products_controller_invalid_ftype(login_disabled_app):
         assert response.status_code == 400
 
 
-def test_find_products_controller_invalid_page(login_disabled_app):
-    with login_disabled_app.test_client() as client:
+def test_find_products_controller_invalid_page(flask_app):
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/search/test/0"
         )
@@ -142,8 +142,8 @@ def test_find_products_controller_invalid_page(login_disabled_app):
         ("search")
     ]
 )
-def test_find_products_controller_invalid_json(mocker, login_disabled_app, request_json, ftype):
-    with login_disabled_app.test_client() as client:
+def test_find_products_controller_invalid_json(mocker, flask_app, request_json, ftype):
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/%s/test/1" % ftype,
             json="notjson"
@@ -156,7 +156,7 @@ def test_find_products_controller_invalid_json(mocker, login_disabled_app, reque
     invalid_min = deepcopy(request_json)
     invalid_min["pricerange"].update(min=-10.0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/%s/test/1" % ftype,
             json=invalid_min
@@ -169,7 +169,7 @@ def test_find_products_controller_invalid_json(mocker, login_disabled_app, reque
     invalid_max = deepcopy(request_json)
     invalid_max["pricerange"].update(max=-10.0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/%s/test/1" % ftype,
             json=invalid_max
@@ -182,7 +182,7 @@ def test_find_products_controller_invalid_json(mocker, login_disabled_app, reque
     invalid_range = deepcopy(request_json)
     invalid_range["pricerange"].update(min=100.0, max=50.0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/%s/test/1" % ftype,
             json=invalid_range
@@ -195,7 +195,7 @@ def test_find_products_controller_invalid_json(mocker, login_disabled_app, reque
     invalid_pagesize = deepcopy(request_json)
     invalid_pagesize.update(pagesize=0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/find/%s/test/1" % ftype,
             json=invalid_pagesize
@@ -254,14 +254,14 @@ def test_find_products_controller_error(mocker, get_request_function, method, ht
         ("/api/store/find/search/test/1", 504),
     ]
 )
-def test_find_products_controller_http_error(login_disabled_app, willstores_ws, json_error_recv, test_url, status_code):
+def test_find_products_controller_http_error(flask_app, willstores_ws, json_error_recv, test_url, status_code):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=status_code,
             json=json_error_recv
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 test_url
             )

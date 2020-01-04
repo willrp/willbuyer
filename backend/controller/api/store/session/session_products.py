@@ -1,7 +1,6 @@
 import os
 from flask_restplus import Namespace, Resource
 from flask import current_app as app
-from flask_login import login_required
 from requests import post
 
 from backend.util.request.store.search_products_request import SearchProductsRequest
@@ -26,8 +25,6 @@ class SessionProductsController(Resource):
         self.__url = app.config["WILLSTORES_WS"]
         self.__headers = {"Authorization": "Bearer %s" % os.getenv("ACCESS_TOKEN")}
 
-    @login_required
-    @sessionProductsNS.doc(security=["login"])
     @sessionProductsNS.param("sessionid", description="The desired session ID", _in="path", required=True)
     @sessionProductsNS.param("page", description="The search page.", _in="path", required=True)
     @sessionProductsNS.param("payload", description="Optional", _in="body", required=False)
@@ -35,7 +32,6 @@ class SessionProductsController(Resource):
     @sessionProductsNS.response(200, "Success", RESPONSEMODEL)
     @sessionProductsNS.response(204, "No content", {})
     @sessionProductsNS.response(400, "Bad Request", ERRORMODEL)
-    @sessionProductsNS.response(401, "Unauthorized", ERRORMODEL)
     @sessionProductsNS.response(500, "Unexpected Error", ERRORMODEL)
     @sessionProductsNS.response(502, "Error while accessing the gateway server", ERRORMODEL)
     @sessionProductsNS.response(504, "No response from the gateway server", ERRORMODEL)

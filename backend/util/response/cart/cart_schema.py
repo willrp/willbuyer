@@ -1,7 +1,9 @@
 from marshmallow import Schema, fields
 
-from .item_schema import ItemSchema
+from .models.price import PriceSchema
+from .models.product import ProductSchema
 
 
 class CartSchema(Schema):
-    item_list = fields.Nested(ItemSchema, required=True, many=True)
+    products = fields.Nested(ProductSchema, required=True, many=True)
+    total = fields.Nested(PriceSchema, required=True)

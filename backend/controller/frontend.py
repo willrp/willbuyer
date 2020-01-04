@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, jsonify, session, redirect
+import asyncio
+import requests
+from flask import Blueprint, render_template, jsonify, session, redirect, current_app as app
 from flask_login import current_user
 
 
@@ -13,9 +15,16 @@ def method_not_allowed(e):
     return jsonify(error), 405
 
 
+async def wake_up_webservices():
+    url = app.config["WILLSTORES_WS"]
+    requests.get("%s/api/start" % (url))
+
+
 @bpfrontend.route("/", methods=['GET'], strict_slashes=False)
 @bpfrontend.route("/<path:path>", methods=['GET'], strict_slashes=False)
 def index(path=None):
+    asyncio.run(wake_up_webservices())
+
     if session.get("next_url") and current_user.is_authenticated:
         next_url = session.get("next_url")
         session.pop("next_url", None)

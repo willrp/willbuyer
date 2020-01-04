@@ -1,55 +1,52 @@
 import requests
 from uuid import uuid4
 
+from backend.util.response.cart import CartSchema
 from backend.util.response.error import ErrorSchema
 
 
-def test_update(domain_url, auth_session, es_create):
+def test_update(domain_url, es_create):
     prod_list = es_create("products", 1)
     item_id = prod_list[0].meta["id"]
 
-    response = auth_session.get(
-        domain_url
-    )
+    with requests.Session() as sess:
+        sess.verify = False
 
-    cookie = response.cookies.get("session")
+        response = sess.get(
+            domain_url
+        )
 
-    response = auth_session.post(
-        domain_url + "/api/cart/update/%s/1" % item_id
-    )
+        cookie = response.cookies.get("session")
 
-    assert response.status_code == 200
-    assert cookie != response.cookies.get("session")
+        response = sess.post(
+            domain_url + "/api/cart/update/%s/1" % item_id
+        )
 
-    cookie = response.cookies.get("session")
+        data = response.json()
+        CartSchema().load(data)
+        assert response.status_code == 200
+        assert cookie != response.cookies.get("session")
 
-    response = auth_session.post(
-        domain_url + "/api/cart/update/%s/10" % item_id
-    )
+        cookie = response.cookies.get("session")
 
-    assert response.status_code == 200
-    assert cookie != response.cookies.get("session")
+        response = sess.post(
+            domain_url + "/api/cart/update/%s/10" % item_id
+        )
 
-    cookie = response.cookies.get("session")
+        data = response.json()
+        CartSchema().load(data)
+        assert response.status_code == 200
+        assert cookie != response.cookies.get("session")
 
-    bad_item_id = str(uuid4())
+        cookie = response.cookies.get("session")
 
-    response = auth_session.post(
-        domain_url + "/api/cart/update/%s/1" % bad_item_id
-    )
+        bad_item_id = str(uuid4())
 
-    data = response.json()
-    ErrorSchema().load(data)
-    assert response.status_code == 400
-    assert cookie == response.cookies.get("session")
+        response = sess.post(
+            domain_url + "/api/cart/update/%s/1" % bad_item_id
+        )
 
-
-def test_update_unauthorized(domain_url):
-    response = requests.post(
-        domain_url + "/api/cart/update/test/1",
-        verify=False
-    )
-
-    data = response.json()
-    ErrorSchema().load(data)
-    assert response.status_code == 401
+        data = response.json()
+        ErrorSchema().load(data)
+        assert response.status_code == 400
+        assert response.cookies.get("session") is None

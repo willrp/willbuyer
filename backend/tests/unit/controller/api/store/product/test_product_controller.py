@@ -32,14 +32,14 @@ def response_json():
     }
 
 
-def test_product_controller(login_disabled_app, willstores_ws, response_json):
+def test_product_controller(flask_app, willstores_ws, response_json):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.GET, re.compile(willstores_ws),
             status=200,
             json=response_json
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.get(
                 "api/store/product/id"
             )
@@ -88,14 +88,14 @@ def test_product_controller_error(mocker, willstores_ws, get_request_function, r
         ("api/store/product/id", 504)
     ]
 )
-def test_product_controller_http_error(login_disabled_app, willstores_ws, json_error_recv, test_url, status_code):
+def test_product_controller_http_error(flask_app, willstores_ws, json_error_recv, test_url, status_code):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.GET, re.compile(willstores_ws),
             status=status_code,
             json=json_error_recv
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.get(
                 test_url
             )

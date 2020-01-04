@@ -1,7 +1,6 @@
 import os
 from flask_restplus import Namespace, Resource
 from flask import current_app as app
-from flask_login import login_required
 from requests import post
 
 from backend.util.request.store.search_products_request import SearchProductsRequest
@@ -27,8 +26,6 @@ class FinderProductsController(Resource):
         self.__headers = {"Authorization": "Bearer %s" % os.getenv("ACCESS_TOKEN")}
         self.__finder_types = ["search", "brand", "kind"]
 
-    @login_required
-    @findProductsNS.doc(security=["login"])
     @findProductsNS.param("ftype", description="The product finder type: 'search', 'kind' or 'brand'", _in="path", required=True)
     @findProductsNS.param("arg", description="The product finder argument: query, product kind or brand", _in="path", required=True)
     @findProductsNS.param("page", description="The finder page.", _in="path", required=True)
@@ -37,7 +34,6 @@ class FinderProductsController(Resource):
     @findProductsNS.response(200, "Success", RESPONSEMODEL)
     @findProductsNS.response(204, "No content", {})
     @findProductsNS.response(400, "Bad Request", ERRORMODEL)
-    @findProductsNS.response(401, "Unauthorized", ERRORMODEL)
     @findProductsNS.response(500, "Unexpected Error", ERRORMODEL)
     @findProductsNS.response(502, "Error while accessing the gateway server", ERRORMODEL)
     @findProductsNS.response(504, "No response from the gateway server", ERRORMODEL)

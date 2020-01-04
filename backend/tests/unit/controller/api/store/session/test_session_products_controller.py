@@ -41,14 +41,14 @@ def response_json():
     }
 
 
-def test_session_products_controller(login_disabled_app, willstores_ws, request_json, response_json):
+def test_session_products_controller(flask_app, willstores_ws, request_json, response_json):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=200,
             json=response_json
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/session/test/1"
             )
@@ -58,7 +58,7 @@ def test_session_products_controller(login_disabled_app, willstores_ws, request_
         assert response.status_code == 200
         assert len(data["products"]) == 1
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/session/test/1",
                 json=request_json
@@ -70,13 +70,13 @@ def test_session_products_controller(login_disabled_app, willstores_ws, request_
         assert len(data["products"]) == 1
 
 
-def test_session_products_controller_no_content(login_disabled_app, willstores_ws, request_json):
+def test_session_products_controller_no_content(flask_app, willstores_ws, request_json):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=204
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/session/test/1"
             )
@@ -85,7 +85,7 @@ def test_session_products_controller_no_content(login_disabled_app, willstores_w
         with pytest.raises(JSONDecodeError):
             json.loads(response.data)
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 "api/store/session/test/1",
                 json=request_json
@@ -96,8 +96,8 @@ def test_session_products_controller_no_content(login_disabled_app, willstores_w
             json.loads(response.data)
 
 
-def test_session_products_controller_invalid_page(login_disabled_app):
-    with login_disabled_app.test_client() as client:
+def test_session_products_controller_invalid_page(flask_app):
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/test/0"
         )
@@ -107,8 +107,8 @@ def test_session_products_controller_invalid_page(login_disabled_app):
         assert response.status_code == 400
 
 
-def test_session_products_controller_invalid_json(mocker, login_disabled_app, request_json):
-    with login_disabled_app.test_client() as client:
+def test_session_products_controller_invalid_json(mocker, flask_app, request_json):
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/test/1",
             json="notjson"
@@ -121,7 +121,7 @@ def test_session_products_controller_invalid_json(mocker, login_disabled_app, re
     invalid_min = deepcopy(request_json)
     invalid_min["pricerange"].update(min=-10.0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/test/1",
             json=invalid_min
@@ -134,7 +134,7 @@ def test_session_products_controller_invalid_json(mocker, login_disabled_app, re
     invalid_max = deepcopy(request_json)
     invalid_max["pricerange"].update(max=-10.0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/test/1",
             json=invalid_max
@@ -147,7 +147,7 @@ def test_session_products_controller_invalid_json(mocker, login_disabled_app, re
     invalid_range = deepcopy(request_json)
     invalid_range["pricerange"].update(min=100.0, max=50.0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/test/1",
             json=invalid_range
@@ -160,7 +160,7 @@ def test_session_products_controller_invalid_json(mocker, login_disabled_app, re
     invalid_pagesize = deepcopy(request_json)
     invalid_pagesize.update(pagesize=0)
 
-    with login_disabled_app.test_client() as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/test/1",
             json=invalid_pagesize
@@ -204,14 +204,14 @@ def test_session_products_controller_error(mocker, get_request_function, method,
         ("/api/store/session/test/1", 504)
     ]
 )
-def test_session_products_controller_http_error(mocker, login_disabled_app, willstores_ws, json_error_recv, test_url, status_code):
+def test_session_products_controller_http_error(mocker, flask_app, willstores_ws, json_error_recv, test_url, status_code):
     with responses.RequestsMock() as rsps:
         rsps.add(responses.POST, re.compile(willstores_ws),
             status=status_code,
             json=json_error_recv
         )
 
-        with login_disabled_app.test_client() as client:
+        with flask_app.test_client() as client:
             response = client.post(
                 test_url
             )

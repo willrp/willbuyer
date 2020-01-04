@@ -1,7 +1,9 @@
 import pytest
 from flask import json
+from uuid import uuid4
 
 from backend.util.response.error import ErrorSchema
+from backend.util.slug import uuid_to_slug
 from webservices.willorders.backend.tests.factories import OrderFactory, ProductFactory, OrderProductFactory
 from webservices.willorders.backend.model import Order, Product, OrderProduct
 
@@ -55,6 +57,33 @@ def test_delete_controller(flask_app, auth_user, es_create, willorders_ws_db_ses
     assert len(willorders_ws_db_session.query(Order).all()) == 0
     assert len(willorders_ws_db_session.query(Product).all()) == 5
     assert len(willorders_ws_db_session.query(OrderProduct).all()) == 0
+
+
+def test_delete_controller_wrong_user(flask_app, auth_user, es_create, willorders_ws_db_session):
+    prod_list = es_create("products", 3)
+    user_slug = uuid_to_slug(uuid4())
+    obj = OrderFactory.create(user_slug=user_slug)
+    willorders_ws_db_session.commit()
+
+    slug = obj.uuid_slug
+    prod_id_list = [p.meta["id"] for p in prod_list]
+
+    amount = 1
+    for es_id in prod_id_list:
+        product = ProductFactory.create(es_id=es_id)
+        OrderProductFactory.create(order=obj, product=product, amount=amount)
+        amount += 1
+
+    willorders_ws_db_session.commit()
+
+    with flask_app.test_client(user=auth_user) as client:
+        response = client.delete(
+            "api/order/delete/%s" % slug
+        )
+
+    data = json.loads(response.data)
+    assert data["error"] == {}
+    assert response.status_code == 404
 
 
 def test_delete_controller_unauthorized(flask_app):

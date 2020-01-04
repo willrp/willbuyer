@@ -4,16 +4,15 @@ from uuid import uuid4
 from json.decoder import JSONDecodeError
 
 from backend.util.response.store.session_results import SessionResultsSchema
-from backend.util.response.error import ErrorSchema
 from backend.util.slug import uuid_to_slug
 
 
-def test_session_controller(flask_app, es_create, auth_user):
+def test_session_controller(flask_app, es_create):
     session_list = es_create("sessions", 3, gender="Women")
     session_id = session_list[0].meta["id"]
     es_create("products", 5, gender="Women", sessionid=session_id)
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/%s" % (session_id)
         )
@@ -23,7 +22,7 @@ def test_session_controller(flask_app, es_create, auth_user):
     assert response.status_code == 200
     assert data["total"] == 5
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/%s" % (session_id),
             json={
@@ -39,7 +38,7 @@ def test_session_controller(flask_app, es_create, auth_user):
     assert response.status_code == 200
     assert data["total"] == 5
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/%s" % (session_id),
             json={
@@ -57,7 +56,7 @@ def test_session_controller(flask_app, es_create, auth_user):
 
     empty_session_id = session_list[1].meta["id"]
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/%s" % (empty_session_id)
         )
@@ -67,20 +66,9 @@ def test_session_controller(flask_app, es_create, auth_user):
 
     assert response.status_code == 204
 
-    with flask_app.test_client(user=auth_user) as client:
+    with flask_app.test_client() as client:
         response = client.post(
             "api/store/session/%s" % (uuid_to_slug(uuid4()))
         )
 
     assert response.status_code == 404
-
-
-def test_session_controller_unauthorized(flask_app):
-    with flask_app.test_client() as client:
-        response = client.post(
-            "api/store/session/test",
-        )
-
-    data = json.loads(response.data)
-    ErrorSchema().load(data)
-    assert response.status_code == 401

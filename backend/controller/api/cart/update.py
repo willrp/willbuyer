@@ -1,10 +1,10 @@
 import os
 from flask import current_app as app
 from flask_restplus import Namespace, Resource
-from flask_login import login_required
-from requests import get
+from requests import get, post
 
 from backend.service import CartService
+from backend.util.response.cart import CartResponse
 from backend.util.response.error import ErrorResponse
 from backend.controller import ErrorHandler
 from backend.errors.request_error import ValidationError
@@ -12,6 +12,7 @@ from backend.errors.request_error import ValidationError
 
 updateNS = Namespace("Cart", description="Cart related operations.")
 
+RESPONSEMODEL = CartResponse.get_model(updateNS, "CartResponse")
 ERRORMODEL = ErrorResponse.get_model(updateNS, "ErrorResponse")
 
 
@@ -23,11 +24,9 @@ class UpdateController(Resource):
         self.__url = app.config["WILLSTORES_WS"]
         self.__headers = {"Authorization": "Bearer %s" % os.getenv("ACCESS_TOKEN")}
 
-    @login_required
-    @updateNS.doc(security=["login"])
     @updateNS.param("item_id", description="Item ID", _in="path", required=True)
     @updateNS.param("amount", description="Amount", _in="path", required=True)
-    @updateNS.response(200, description="Success", mask=False)
+    @updateNS.response(200, "Success", RESPONSEMODEL)
     @updateNS.response(400, "Bad Request", ERRORMODEL)
     @updateNS.response(401, "Unauthorized", ERRORMODEL)
     @updateNS.response(500, "Unexpected Error", ERRORMODEL)
@@ -39,14 +38,22 @@ class UpdateController(Resource):
             if amount <= 0:
                 raise ValidationError("'%s' is an invalid item amount. It must be a positive natural number" % amount)
             else:
-                req = get("%s/api/product/%s" % (self.__url, item_id), headers=self.__headers)
+                item_dict = self.__cartservice.to_dict()
+                item_dict.update({item_id: amount})
+                item_list = [{"item_id": key, "amount": value} for key, value in item_dict.items()]
+                items_info = {"item_list": item_list}
 
-                if req.status_code == 404:
-                    raise ValidationError("'%s' is an invalid item ID." % item_id)
-
+                req = post("%s/api/product/list" % (self.__url), headers=self.__headers, json=items_info)
                 req.raise_for_status()
+                result = req.json()
 
                 self.__cartservice.update_item(item_id, amount)
-                return {}, 200
+
+                for item in item_list:
+                    product = next(p for p in result["products"] if p["id"] == item["item_id"])
+                    product["amount"] = item["amount"]
+
+                jsonsend = CartResponse.marshall_json(dict(**result))
+                return jsonsend
         except Exception as error:
             return ErrorHandler(error).handle_error()

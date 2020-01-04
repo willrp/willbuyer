@@ -1,7 +1,6 @@
 import os
 from flask import current_app as app
 from flask_restplus import Namespace, Resource
-from flask_login import login_required
 from requests import get
 
 from backend.util.response.store.product_results import ProductResultsResponse
@@ -22,11 +21,8 @@ class ProductController(Resource):
         self.__url = app.config["WILLSTORES_WS"]
         self.__headers = {"Authorization": "Bearer %s" % os.getenv("ACCESS_TOKEN")}
 
-    @login_required
-    @productNS.doc(security=["login"])
     @productNS.param("productid", description="The desired product ID", _in="path", required=True)
     @productNS.response(200, "Success", RESPONSEMODEL)
-    @productNS.response(401, "Unauthorized", ERRORMODEL)
     @productNS.response(404, "Not Found", {})
     @productNS.response(500, "Unexpected Error", ERRORMODEL)
     @productNS.response(504, "Error while accessing the gateway server", ERRORMODEL)

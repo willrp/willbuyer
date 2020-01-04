@@ -1,0 +1,44 @@
+[ignore]
+.*/\.git/.*
+<PROJECT_ROOT>/\.vscode/.*
+<PROJECT_ROOT>/flow/.*
+<PROJECT_ROOT>/dist/.*
+<PROJECT_ROOT>/docs/.*
+<PROJECT_ROOT>/tests/.*
+<PROJECT_ROOT>/webpack.*.js
+
+[include]
+
+[libs]
+flow-typed
+
+[lints]
+
+[options]
+module.file_ext=.css
+module.file_ext=.js
+module.file_ext=.jsx
+module.file_ext=.json
+
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable
+esproposal.decorators=ignore
+esproposal.export_star_as=enable
+
+module.name_mapper='.*\(.css\)' -> 'empty/object'
+
+module.name_mapper='^willbuyer\(.*\)$' -> '<PROJECT_ROOT>/\1'
+module.name_mapper='^img\(.*\)$' -> '<PROJECT_ROOT>/img/\1'
+module.name_mapper='^css\(.*\)$' -> '<PROJECT_ROOT>/css/\1'
+module.name_mapper='^components\(.*\)$' -> '<PROJECT_ROOT>/js/components/\1'
+module.name_mapper='^lib\(.*\)$' -> '<PROJECT_ROOT>/js/lib/\1'
+module.name_mapper='^types\(.*\)$' -> '<PROJECT_ROOT>/js/types/\1'
+
+module.system.node.resolve_dirname=node_modules
+module.ignore_non_literal_requires=true
+
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+suppress_comment= \\(.\\|\n\\)*\\$FlowIssue
+suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+
+[strict]
