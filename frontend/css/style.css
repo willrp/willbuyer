@@ -49,10 +49,6 @@
     border-bottom-color: deepskyblue;
 }
 
-.DateRangePickerInput_arrow {
-    color: deepskyblue;
-}
-
 .DateRangePickerInput_arrow>.icon {
     margin: 0
 }

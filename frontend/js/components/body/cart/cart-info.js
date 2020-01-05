@@ -4,6 +4,7 @@ import { Grid, Header, Statistic, Segment } from "semantic-ui-react";
 
 //IMPORT HOOKS==============================================================
 import useAnimatedCounter from "hooks/animated-counter";
+import useIsPhone from "hooks/is-phone";
 
 //IMPORT EXTERNAL FUNCTIONS=================================================
 import { css } from "emotion";
@@ -61,25 +62,27 @@ function CartInfo({ productsType, itemCount, total }) {
     const discount = Math.floor((1.0 - (outlet / retail)) * 100);
     const discountvalue = useAnimatedCounter(discount);
 
+    const isPhone = useIsPhone();
+
     function render() {
         return (
             <Grid
                 className={gridClass}
-                columns="equal"
+                columns={4}
             >
                 <Grid.Column>
                     <Segment textAlign="center">
-                        <Statistic>
+                        <Statistic size={(isPhone) ? "small" : null}>
                             <Statistic.Value>{productsvalue}</Statistic.Value>
-                            <Statistic.Label>Products</Statistic.Label>
+                            <Statistic.Label>{(productsvalue === 1) ? "Product" : "Products"}</Statistic.Label>
                         </Statistic>
                     </Segment>
                 </Grid.Column>
                 <Grid.Column>
                     <Segment textAlign="center">
-                        <Statistic>
+                        <Statistic size={(isPhone) ? "small" : null}>
                             <Statistic.Value>{itemCountvalue}</Statistic.Value>
-                            <Statistic.Label>Items</Statistic.Label>
+                            <Statistic.Label>{(itemCountvalue === 1) ? "Item" : "Items"}</Statistic.Label>
                         </Statistic>
                     </Segment>
                 </Grid.Column>
@@ -94,7 +97,7 @@ function CartInfo({ productsType, itemCount, total }) {
                 </Grid.Column>
                 <Grid.Column>
                     <Segment textAlign="center" className={discountClass}>
-                        <Statistic>
+                        <Statistic size={(isPhone) ? "small" : null}>
                             <Statistic.Value>{discountvalue}%</Statistic.Value>
                             <Statistic.Label>Off</Statistic.Label>
                         </Statistic>

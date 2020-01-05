@@ -17,6 +17,7 @@ import { SidebarContext } from "contexts/sidebar-context";
 //IMPORT HOOKS==============================================================
 import useRequestData from "hooks/request-data";
 import useDidMount from "hooks/did-mount";
+import useIsPhone from "hooks/is-phone";
 
 //IMPORT EXTERNAL FUNCTIONS=================================================
 import { css } from "emotion";
@@ -82,6 +83,8 @@ function Products({ url, pricerange, total, location }) {
     const [outerRequest, setOuterRequest] = useState(null);
     const outerRequestData = useRequestData(outerRequest);
     const { sidesessions, updateItems } = useContext(SidebarContext);
+
+    const isPhone = useIsPhone();
 
     useEffect(() => {
         if(!didMount && currentUrl === url) {
@@ -152,8 +155,15 @@ function Products({ url, pricerange, total, location }) {
             return (
                 <Fragment>
                     <ProductGrid products={products} />
-                    <div className={paginationClass} >
-                        <Pagination activePage={page.toString()} totalPages={totalPages} onPageChange={changePage} pageItem={{className: pageItem}} />
+                    <div className={paginationClass}>
+                        <Pagination
+                            activePage={page.toString()}
+                            totalPages={totalPages}
+                            onPageChange={changePage}
+                            pageItem={{className: pageItem}}
+                            boundaryRange={(isPhone) ? 0 : 1}
+                            ellipsisItem={(isPhone) ? null : undefined}
+                        />
                     </div>
                 </Fragment>
             )

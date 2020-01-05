@@ -16,7 +16,6 @@ function PageSizeSelect({ value, pageList, onChange }) {
             selection
             value={value}
             onChange={onChange}
-            compact
         />
     )
 }
