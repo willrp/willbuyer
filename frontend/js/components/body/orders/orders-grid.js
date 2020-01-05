@@ -6,6 +6,9 @@ import { Grid, Segment, Statistic, Button } from "semantic-ui-react";
 //IMPORT INTERNAL COMPONENTS================================================
 import ResponsiveGrid from "components/util/responsive-grid";
 
+//IMPORT HOOKS==============================================================
+import useIsPhone from "hooks/is-phone";
+
 //IMPORT EXTERNAL FUNCTIONS=================================================
 import { css } from "emotion";
 import moment from "moment";
@@ -44,11 +47,12 @@ const segmentGroupClass = css({
     },
     "&&&&&>.segments:last-child>.segment:last-child": {
         padding: "0",
+        minHeight: "50%",
         display: "flex",
-        height: "50%"
+        flexGrow: 1,
+        alignItems: "stretch"
     },
     "&&&&& .button": {
-        height: "100%",
         margin: "0",
         color: "black",
         backgroundColor: "lightskyblue",
@@ -64,6 +68,8 @@ const segmentGroupClass = css({
 
 //COMPONENT=================================================================
 function OrdersGrid({ orders }) {
+    const isPhone = useIsPhone();
+
     function renderOrders() {
         return orders.map(
             (item) => {
@@ -77,7 +83,7 @@ function OrdersGrid({ orders }) {
                                 <Segment textAlign="center">
                                     <Statistic size="mini">
                                         <Statistic.Label>Order Placed</Statistic.Label>
-                                        <Statistic.Value>{updatedAtMoment.format("YYYY-MM-DD ddd")}</Statistic.Value>
+                                        <Statistic.Value>{(isPhone) ? updatedAtMoment.format("YYYY-MM-DD") : updatedAtMoment.format("YYYY-MM-DD ddd")}</Statistic.Value>
                                     </Statistic>
                                 </Segment>
                                 <Segment textAlign="center">
@@ -108,7 +114,7 @@ function OrdersGrid({ orders }) {
                                         <Statistic.Value>{symbol}{outlet.toFixed(2)}</Statistic.Value>
                                     </Statistic>    
                                 </Segment>
-                                <Segment textAlign="center">
+                                <Segment>
                                     <Button 
                                         fluid
                                         as={Link}

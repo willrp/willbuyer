@@ -9,6 +9,9 @@ import SearchItem from "./search-item";
 import UserItem from "./user-item";
 import CartItem from "./cart-item";
 
+//IMPORT HOOKS==============================================================
+import useIsPhone from "hooks/is-phone";
+
 // //IMPORT EXTERNAL FUNCTIONS=================================================
 import { css } from "emotion";
 
@@ -19,6 +22,8 @@ const headerClass = css({
         border: "1px solid rgba(34,36,38,.15)",
         boxShadow: "0 1px 2px 0 rgba(34,36,38,.15)",
         borderRadius: ".28571429rem",
+        marginLeft: "0 !important",
+        marginRight: "0 !important",
         marginBottom: "3px"
     }
 })
@@ -33,8 +38,20 @@ const menuClass = css({
     }
 })
 
+const phoneMenuClass = css({
+    "&&&&&": {
+        display: "flex"        
+    },
+    "&&&&& .item": {
+        flexGrow: 1,
+        justifyContent: "center"
+    }
+})
+
 //COMPONENT=================================================================
 function Header() {
+    const isPhone = useIsPhone();
+
     return (
         <Container className={headerClass} fluid>
             <Menu className={menuClass} borderless>
@@ -46,11 +63,19 @@ function Header() {
                 >
                     <SearchItem />
                 </Responsive>
-                <Menu.Menu position="right">
+                {!isPhone &&
+                    <Menu.Menu position="right">
+                        <UserItem />
+                        <CartItem />
+                    </Menu.Menu>
+                }
+            </Menu>
+            {isPhone &&
+                <Menu className={`${menuClass} ${phoneMenuClass}`} borderless>
                     <UserItem />
                     <CartItem />
-                </Menu.Menu>
-            </Menu>
+                </Menu>
+            }
             <Responsive
                 {...Responsive.onlyMobile}
                 as={Fragment}

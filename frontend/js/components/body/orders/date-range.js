@@ -3,11 +3,16 @@ import React, { Fragment, useState } from "react";
 import { Icon, Button } from "semantic-ui-react";
 import { DateRangePicker } from "react-dates";
 
+//IMPORT HOOKS==============================================================
+import useIsPhone from "hooks/is-phone";
+
 //COMPONENT=================================================================
-function DateRange({ onDatesChange }) {
-    const [showClearDates, setShowClearDates] = useState(false);
-    const [dateRange, setDateRange] = useState({startDate: null, endDate: null});
+function DateRange({ initialRange, onDatesChange }) {
+    const [showClearDates, setShowClearDates] = useState((initialRange.startDate !== null && initialRange.endDate !== null));
+    const [dateRange, setDateRange] = useState(initialRange);
     const [focusedInput, setfocusedInput] = useState(null);
+
+    const isPhone = useIsPhone();
 
     function clearDates() {
         setShowClearDates(false);
@@ -36,10 +41,14 @@ function DateRange({ onDatesChange }) {
                     focusedInput={focusedInput}
                     onFocusChange={(input) => setfocusedInput(input)}
                     noBorder={true}
+                    readOnly={true}
                     displayFormat="YYYY/MM/DD"
                     isOutsideRange={() => false}
                     hideKeyboardShortcutsPanel={true}
-                    customArrowIcon={<Icon name="arrow alternate circle right outline" size="big" />}
+                    numberOfMonths={(isPhone) ? 1 : 2}
+                    withFullScreenPortal={isPhone}
+                    disableScroll={isPhone}
+                    small={true}
                 />
                 {showClearDates && <Button icon circular className="DateRangePickerClear_button" onClick={clearDates}><Icon name="x" /></Button>}
             </Fragment>

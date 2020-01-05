@@ -13,6 +13,7 @@ import OrdersGrid from "./orders-grid";
 //IMPORT HOOKS==============================================================
 import useRequestData from "hooks/request-data";
 import useDidMount from "hooks/did-mount";
+import useIsPhone from "hooks/is-phone";
 
 //IMPORT EXTERNAL FUNCTIONS=================================================
 import { css } from "emotion";
@@ -26,8 +27,19 @@ const segmentsClass = css({
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
-    },
-    "&&&&& .dateRangeClass": {
+    }
+})
+
+const phoneSegmentClass = css({
+    "&&&&&": {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+    }
+})
+
+const dateRangeClass = css({
+    "&&&&&": {
         padding: "0"
     }
 })
@@ -49,7 +61,7 @@ const pageItem = css({
 function OrdersContent({ pages, total, orders, pageSize }) {
     const [page, setPage] = useState(1);
     const [currentPageSize, setCurrentPageSize] = useState(pageSize);
-    const [dateRange, setDateRange] = useState({start: null, end: null});
+    const [dateRange, setDateRange] = useState({startDate: null, endDate: null});
 
     const [currentLoading, setCurrentLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(pages);
@@ -60,23 +72,25 @@ function OrdersContent({ pages, total, orders, pageSize }) {
     const [request, setRequest] = useState(null);
     const requestData = useRequestData(request);
 
+    const isPhone = useIsPhone();
+
     useEffect(() => {
         if(!didMount){
             setCurrentLoading(true);
-            const { start, end } = dateRange;
-            const datespan = (start !== null && end !== null) ? dateRange : null
+            const { startDate, endDate } = dateRange;
+            const datespan = (startDate !== null && endDate !== null) ? {start: startDate.format("YYYY-MM-DD"), end: endDate.format("YYYY-MM-DD")} : null
             setRequest({
                 url: "/api/order/user",
                 method: "post",
                 responseType: "json",
                 data: {
                     page: page,
-                    page_size: pageSize,
+                    page_size: currentPageSize,
                     datespan: datespan
                 }
             })
         }
-    }, [page, pageSize, dateRange.start, dateRange.end])
+    }, [page, currentPageSize, dateRange.startDate, dateRange.endDate])
 
     useEffect(() => {
         const { loading, data, status, error } = requestData;
@@ -106,12 +120,9 @@ function OrdersContent({ pages, total, orders, pageSize }) {
         setCurrentPageSize(value);
     }    
 
-    function changeDate({ startDate, endDate }) {
+    function changeDate(value) {
         setPage(1);
-        setDateRange({
-            start: startDate.format("YYYY-MM-DD"),
-            end: endDate.format("YYYY-MM-DD")
-        });
+        setDateRange(value);
     }
 
     function renderOrders() {
@@ -127,7 +138,14 @@ function OrdersContent({ pages, total, orders, pageSize }) {
                 <Fragment>
                     <OrdersGrid orders={currentOrders} />
                     <div className={paginationClass} >
-                        <Pagination activePage={page.toString()} totalPages={totalPages} onPageChange={changePage} pageItem={{className: pageItem}} />
+                        <Pagination
+                            activePage={page.toString()}
+                            totalPages={totalPages}
+                            onPageChange={changePage}
+                            pageItem={{className: pageItem}}
+                            boundaryRange={(isPhone) ? 0 : 1}
+                            ellipsisItem={(isPhone) ? null : undefined}
+                        />
                     </div>
                 </Fragment>
             )
@@ -141,17 +159,27 @@ function OrdersContent({ pages, total, orders, pageSize }) {
                     <Segment>
                         <Counter total={currentTotal} />
                     </Segment>
-                    <Segment>
-                        <Label attached="top left">Date Range: </Label>
-                        <Segment className="dateRangeClass">
-                            <DateRange onDatesChange={changeDate} />
+                    {!isPhone &&
+                        <Segment>
+                            <Label attached="top left">Date Range: </Label>
+                            <Segment className={dateRangeClass}>
+                                <DateRange initialRange={dateRange} onDatesChange={changeDate} />
+                            </Segment>
                         </Segment>
-                    </Segment>
+                    }
                     <Segment>
                         <Label attached="top left">Orders per page: </Label>
                         <PageSizeSelect value={currentPageSize} pageList={[6, 12, 18, 24, 30]} onChange={changePageSize} />
                     </Segment>
                 </Segment.Group>
+                {isPhone &&
+                    <Segment attached="bottom" className={phoneSegmentClass}>
+                        <Label attached="top left">Date Range: </Label>
+                        <Segment className={dateRangeClass}>
+                            <DateRange initialRange={dateRange} onDatesChange={changeDate} />
+                        </Segment>
+                    </Segment>
+                }
                 {renderOrders()}
             </Fragment>
         )
