@@ -1,6 +1,7 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { Fragment, useState, useContext, useEffect } from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import { useLocation, useRouteMatch } from "react-router";
+import { Redirect } from "react-router-dom";
 import { Header } from "semantic-ui-react";
 
 //IMPORT INTERNAL COMPONENTS================================================
@@ -31,8 +32,10 @@ const headerClass = css({
 })
 
 //COMPONENT=================================================================
-function ProductsContent({ urlobj, match, location }) {
-    const query = queryString.parse(location.search);
+function ProductsContent({ urlobj }) {
+    const { search } = useLocation();
+    const match = useRouteMatch();
+    const query = queryString.parse(search);
     const [pickedrange, setPickedRange] = useState(validatePriceRange(pick(query, ["min", "max"])));
     
     const [request, setRequest] = useState(null);
@@ -126,4 +129,4 @@ function ProductsContent({ urlobj, match, location }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(ProductsContent);
+export default ProductsContent;

@@ -1,6 +1,7 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { Fragment, useState, useContext, useEffect, useReducer } from "react";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router";
+import { Link, useHistory } from "react-router-dom";
 import { Button, Icon, Modal, Message } from "semantic-ui-react";
 
 //IMPORT CONTEXTS===========================================================
@@ -64,6 +65,8 @@ function OrderButton() {
     const { data, isLoggedIn } = useContext(CurrentUserContext);
     const [request, setRequest] = useState(null);
     const requestData = useRequestData(request);
+    let history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
         const { status } = requestData;
@@ -90,7 +93,7 @@ function OrderButton() {
             })
         }
         else{
-            window.location.replace("/login");
+            history.replace("/login", { from: location });
         }
     }
 

@@ -1,13 +1,13 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 //IMPORT INTERNAL COMPONENTS================================================
 import ProductsContent from "components/products-content";
 
 //COMPONENT=================================================================
-function Kind({ match }) {
-    const { kind } = match.params;
+function Kind() {
+    const { kind } = useParams();
     const preffix = "/api/store/find";
     const type = "kind";
     const arg = kind;
@@ -16,4 +16,4 @@ function Kind({ match }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(Kind);
+export default Kind;

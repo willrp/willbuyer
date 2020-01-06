@@ -91,7 +91,7 @@ function CartInfo({ productsType, itemCount, total }) {
                         <div>
                             <p className="titleClass">Total Price:</p>
                             <p className="priceMetaClass">{symbol}{retailvalue.toFixed(2)}</p>
-                            <Header as="h2" className="priceHeaderClass">{symbol}{outletvalue.toFixed(2)}</Header>
+                            <Header as={(isPhone) ? "h4" : "h2"} className="priceHeaderClass">{symbol}{outletvalue.toFixed(2)}</Header>
                         </div>
                     </Segment>
                 </Grid.Column>

@@ -1,6 +1,6 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { Fragment, useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Header } from "semantic-ui-react";
 
 //IMPORT INTERNAL COMPONENTS================================================
@@ -23,8 +23,8 @@ const headerClass = css({
 })
 
 //COMPONENT=================================================================
-function Orders({ match }) {
-    const { orderid } = match.params;
+function Orders() {
+    const { orderid } = useParams();
     const [request, setRequest] = useState(null);
     const requestData = useRequestData(request);
 
@@ -60,4 +60,4 @@ function Orders({ match }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(Orders);
+export default Orders;

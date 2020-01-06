@@ -58,7 +58,7 @@ function CategoriesItem() {
                 duration={500}
                 visible={visibleNotification}
             >
-                <Icon className={exclamationClass} corner="top right" name="exclamation circle" color="red" />
+                <Icon className={exclamationClass} corner="top right" name="info circle" color="orange" />
             </Transition>
         </Menu.Item>
     )

@@ -1,16 +1,16 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 //IMPORT INTERNAL COMPONENTS================================================
 import Content from "./content";
 
 //COMPONENT=================================================================
-function Gender(props) {
-    const { gender } = props.match.params;
+function Gender() {
+    const { gender } = useParams();
 
     return <Content gender={gender} />
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(Gender);
+export default Gender;
