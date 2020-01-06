@@ -1,13 +1,13 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 //IMPORT INTERNAL COMPONENTS================================================
 import ProductsContent from "components/products-content";
 
 //COMPONENT=================================================================
-function Session({ match }) {
-    const { sessionid } = match.params;
+function Session() {
+    const { sessionid } = useParams();
     const preffix = "/api/store";
     const type = "session";
     const arg = sessionid;
@@ -16,4 +16,4 @@ function Session({ match }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(Session);
+export default Session;

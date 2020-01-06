@@ -4,6 +4,7 @@ import { Grid, Header, Statistic, Segment } from "semantic-ui-react";
 
 //IMPORT HOOKS==============================================================
 import useAnimatedCounter from "hooks/animated-counter";
+import useIsPhone from "hooks/is-phone";
 
 //IMPORT EXTERNAL FUNCTIONS=================================================
 import { css } from "emotion";
@@ -20,6 +21,11 @@ const gridClass = css({
     },
     "&&&&& .column": {
         padding: "0"
+    },
+    "&&&&& .segments": {
+        margin: 0,
+        display: "flex",
+        alignItems: "center"
     },
     "&&&&& .segment": {
         padding: "0.25em",
@@ -66,6 +72,7 @@ function OrderInfo({ product_types, items_amount, total, updated_at }) {
     const discountvalue = useAnimatedCounter(discount);
 
     const updatedAtMoment = moment(updated_at);
+    const isPhone = useIsPhone();
 
     function render() {
         return (
@@ -75,26 +82,26 @@ function OrderInfo({ product_types, items_amount, total, updated_at }) {
             >
                 <Grid.Row>
                     <Grid.Column>
-                        <Segment textAlign="center">
-                            <Statistic size="mini" horizontal>
-                                <Statistic.Label>Order Placed:</Statistic.Label>
-                                <Statistic.Value>{updatedAtMoment.format("YYYY-MM-DD ddd")}</Statistic.Value>
-                            </Statistic>
-                        </Segment>
-                    </Grid.Column>
-                    <Grid.Column>
-                        <Segment textAlign="center">
-                            <Statistic size="mini" horizontal>
-                                <Statistic.Label>Time:</Statistic.Label>
-                                <Statistic.Value>{updatedAtMoment.format("HH:mm:ss")} JST</Statistic.Value>
-                            </Statistic>
-                        </Segment>
+                        <Segment.Group horizontal={!isPhone}>
+                            <Segment textAlign="center">
+                                <Statistic size="mini" horizontal>
+                                    <Statistic.Label>Order Placed:</Statistic.Label>
+                                    <Statistic.Value>{updatedAtMoment.format("YYYY-MM-DD ddd")}</Statistic.Value>
+                                </Statistic>
+                            </Segment>
+                            <Segment textAlign="center">
+                                <Statistic size="mini" horizontal>
+                                    <Statistic.Label>Time:</Statistic.Label>
+                                    <Statistic.Value>{updatedAtMoment.format("HH:mm:ss")} JST</Statistic.Value>
+                                </Statistic>
+                            </Segment>
+                        </Segment.Group>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column>
                         <Segment textAlign="center">
-                            <Statistic>
+                            <Statistic size={(isPhone) ? "small" : null}>
                                 <Statistic.Value>{productvalue}</Statistic.Value>
                                 <Statistic.Label>Products</Statistic.Label>
                             </Statistic>
@@ -102,7 +109,7 @@ function OrderInfo({ product_types, items_amount, total, updated_at }) {
                     </Grid.Column>
                     <Grid.Column>
                         <Segment textAlign="center">
-                            <Statistic>
+                            <Statistic size={(isPhone) ? "small" : null}>
                                 <Statistic.Value>{itemsvalue}</Statistic.Value>
                                 <Statistic.Label>Items</Statistic.Label>
                             </Statistic>
@@ -113,13 +120,13 @@ function OrderInfo({ product_types, items_amount, total, updated_at }) {
                             <div>
                                 <p className="titleClass">Total Price:</p>
                                 <p className="priceMetaClass">{symbol}{retailvalue.toFixed(2)}</p>
-                                <Header as="h2" className="priceHeaderClass">{symbol}{outletvalue.toFixed(2)}</Header>
+                                <Header as={(isPhone) ? "h4" : "h2"} className="priceHeaderClass">{symbol}{outletvalue.toFixed(2)}</Header>
                             </div>
                         </Segment>
                     </Grid.Column>
                     <Grid.Column>
                         <Segment textAlign="center" className={discountClass}>
-                            <Statistic>
+                            <Statistic size={(isPhone) ? "small" : null}>
                                 <Statistic.Value>{discountvalue}%</Statistic.Value>
                                 <Statistic.Label>Off</Statistic.Label>
                             </Statistic>

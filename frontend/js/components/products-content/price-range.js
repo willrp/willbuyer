@@ -1,6 +1,7 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { useRouteMatch } from "react-router";
+import { useHistory } from "react-router-dom";
 import Slider, {createSliderWithTooltip} from 'rc-slider';
 
 const Range = createSliderWithTooltip(Slider.Range);
@@ -20,7 +21,9 @@ const rangeClass = css({
 })
 
 //COMPONENT=================================================================
-function PriceRange({ pricerange, pickedrange, executeOnChange, history, match }) {
+function PriceRange({ pricerange, pickedrange, executeOnChange }) {
+    let history = useHistory();
+    const match = useRouteMatch();
     const valuerange = (pickedrange === null) ? pricerange : pickedrange;
     const [currentValue, setCurrentValue] = useState([valuerange.min, valuerange.max])
 
@@ -70,4 +73,4 @@ function PriceRange({ pricerange, pickedrange, executeOnChange, history, match }
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(PriceRange);
+export default PriceRange;

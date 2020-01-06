@@ -1,7 +1,8 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
-import { Menu, Form, Input, Button } from "semantic-ui-react";
+import { useLocation } from "react-router";
+import { useHistory } from "react-router-dom";
+import { Menu, Form, Button } from "semantic-ui-react";
 
 // //IMPORT EXTERNAL FUNCTIONS=================================================
 import { css } from "emotion";
@@ -14,8 +15,10 @@ const itemClass = css({
 })
 
 //COMPONENT=================================================================
-function SearchItem({ history, location }) {
+function SearchItem() {
     const [searchquery, setSearchQuery] = useState("");
+    let history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
         setSearchQuery("");
@@ -51,4 +54,4 @@ function SearchItem({ history, location }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(SearchItem);
+export default SearchItem;

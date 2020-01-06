@@ -1,6 +1,6 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { Fragment, useState, useContext, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { useLocation } from "react-router";
 import { Segment, Label, Pagination, Responsive } from "semantic-ui-react";
 
 //IMPORT INTERNAL COMPONENTS================================================
@@ -69,8 +69,9 @@ const pageItem = css({
 })
 
 //COMPONENT=================================================================
-function Products({ url, pricerange, total, location }) {
-    const query = queryString.parse(location.search);
+function Products({ url, pricerange, total }) {
+    const { search } = useLocation();
+    const query = queryString.parse(search);
     const queryRange = validatePriceRange(pick(query, ["min", "max"]));
     const pickedrange = (queryRange === null) ? pricerange : queryRange;
 
@@ -207,4 +208,4 @@ function Products({ url, pricerange, total, location }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(Products);
+export default Products;

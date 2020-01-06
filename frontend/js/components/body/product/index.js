@@ -1,6 +1,6 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Segment, Responsive } from "semantic-ui-react";
 
 //IMPORT INTERNAL COMPONENTS================================================
@@ -25,8 +25,8 @@ const renderClass = css({
 })
 
 //COMPONENT=================================================================
-function Product({ match }) {
-    const { productid } = match.params;
+function Product() {
+    const { productid } = useParams();
     const [stacked, setStacked] = useState(false);    
     const [request, setRequest] = useState(null);
     const requestData = useRequestData(request);
@@ -90,4 +90,4 @@ function Product({ match }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(Product);
+export default Product;

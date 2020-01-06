@@ -1,5 +1,7 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import { useEffect, useReducer } from "react";
+import { useLocation } from "react-router";
+import { useHistory } from "react-router-dom";
 import NProgress from "react-nprogress";
 
 //IMPORT EXTERNAL FUNCTIONS=================================================
@@ -8,6 +10,9 @@ import { cloneDeep } from "lodash";
 
 //HOOK======================================================================
 function useRequestData(request, afterRequest) {
+    let history = useHistory();
+    const location = useLocation();
+
     const initialState = {
         loading: true,
         progress: 0,
@@ -91,7 +96,7 @@ function useRequestData(request, afterRequest) {
                     }
                     else if(error.response){
                         if(error.response.status === 401){
-                            window.location.replace("/login");
+                            history.replace("/login", { from: location });
                         }
                         else{
                             dispatch({type: "RECEIVE_ERROR", status: error.response.status, error: error.response.data})

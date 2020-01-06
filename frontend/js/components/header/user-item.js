@@ -1,7 +1,8 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { useContext } from "react";
+import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
 import { Menu, Dropdown, Icon, Image, Label } from "semantic-ui-react";
-import { Link, withRouter } from "react-router-dom";
 
 //IMPORT CONTEXTS===========================================================
 import { CurrentUserContext } from "contexts/current-user-context";
@@ -35,11 +36,11 @@ const menuClass = css({
 })
 
 //COMPONENT=================================================================
-function UserItem({ location }) {
+function UserItem() {
     const { data, isLoggedIn } = useContext(CurrentUserContext);
+    const { pathname, state } = useLocation();
 
     function renderLogin() {
-        const { pathname, state } = location;
         var redirVar = "?next=" + pathname;
 
         if(typeof state !== "undefined" && "from" in state){
@@ -100,4 +101,4 @@ function UserItem({ location }) {
 }
 
 //EXPORT COMPONENT==========================================================
-export default withRouter(UserItem);
+export default UserItem;

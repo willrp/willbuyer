@@ -1,6 +1,7 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { Fragment, useContext } from "react";
 import { Redirect } from "react-router-dom";
+import { useLocation } from "react-router";
 import { Header, Icon, Button } from "semantic-ui-react";
 
 //IMPORT CONTEXTS===========================================================
@@ -17,11 +18,10 @@ const headerClass = css({
 })
 
 //COMPONENT=================================================================
-function Login({ location }) {
-    const currentUser = useContext(CurrentUserContext);
-    const { isLoggedIn } = currentUser;
+function Login() {
+    const { isLoggedIn } = useContext(CurrentUserContext);
+    const { pathname, state } = useLocation();
 
-    const { pathname, state } = location;
     var redirVar = "?next=" + pathname;
 
     if(typeof state !== "undefined" && "from" in state){
