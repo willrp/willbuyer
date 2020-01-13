@@ -52,7 +52,7 @@ function Home() {
                 <Message.Header>Disclaimer</Message.Header>
                 <p>
                     This Web application is for demonstration purposes only. You cannot do real shopping here.
-                    Thank you for understanding. <br /> Author: Will Roger Pereira
+                    Thank you for understanding. <br /> Author: Will Roger Pereira - <a href="frontend/dist/Rirekisho.pdf">履歴書/Resume</a>
                 </p>
             </Message>
             <Grid className={gridClass}>
