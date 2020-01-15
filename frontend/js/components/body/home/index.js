@@ -1,7 +1,7 @@
 //IMPORT EXTERNAL COMPONENTS================================================
 import React, { Fragment, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { Message, Grid, Image } from "semantic-ui-react";
+import { Message, Grid, Image, Flag } from "semantic-ui-react";
 
 //IMPORT INTERNAL COMPONENTS================================================
 import imgmen from "img/men.jpg";
@@ -51,8 +51,8 @@ function Home() {
             <Message className={messageClass}>
                 <Message.Header>Disclaimer</Message.Header>
                 <p>
-                    This Web application is for demonstration purposes only. You cannot do real shopping here.
-                    Thank you for understanding. <br /> Author: Will Roger Pereira - <a href="frontend/dist/Rirekisho.pdf">履歴書/Resume</a>
+                    This Web application is for demonstration purposes only. You cannot do real shopping here. Thank you for understanding.
+                    <br /> Author: Will Roger Pereira - <a href="frontend/dist/Resume.pdf">Resume <Flag name="gb" /></a> - <a href="frontend/dist/Rirekisho.pdf">履歴書 <Flag name="jp" /></a>
                 </p>
             </Message>
             <Grid className={gridClass}>
